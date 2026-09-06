@@ -1,0 +1,19 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\source\\cicadavoxelrender\\private\\cvxroboticsfieldshader.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\intermediate\\build\\win64\\x64\\mmmvoxelseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.valexpapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cicadavoxelrender\\definitions.cicadavoxelrender.h",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\source\\cicadavoxelrender\\private\\cvxroboticsfieldshader.h",
+            "c:\\program files\\epic games\\ue_5.8\\engine\\source\\runtime\\rendercore\\public\\shaderparameterstruct.h",
+            "c:\\program files\\epic games\\ue_5.8\\engine\\source\\runtime\\rendercore\\public\\rendergraphresources.h",
+            "c:\\program files\\epic games\\ue_5.8\\engine\\source\\runtime\\rhi\\public\\rhitransientresourceallocator.h",
+            "c:\\program files\\epic games\\ue_5.8\\engine\\source\\runtime\\rendercore\\public\\rendergraphparameter.h",
+            "c:\\program files\\epic games\\ue_5.8\\engine\\source\\runtime\\rendercore\\public\\rendergraphresources.inl"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

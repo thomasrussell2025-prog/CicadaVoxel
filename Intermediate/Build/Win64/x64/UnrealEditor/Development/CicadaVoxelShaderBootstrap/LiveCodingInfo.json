@@ -1,0 +1,9 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.CicadaVoxelShaderBootstrap.cpp.obj": [
+			"PerModuleInline.gen.cpp.obj",
+			"CicadaVoxelShaderBootstrapModule.cpp.obj"
+		]
+	}
+}

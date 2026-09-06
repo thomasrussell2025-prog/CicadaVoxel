@@ -1,0 +1,4 @@
+CICADA Voxel CVX-004B PERSISTENT GPU FIELD
+Package prefix: CicadaVoxel
+Deploy with CICADA Unreal Forge.
+Main performance change: no per-frame full field snapshot/buffer rebuild.

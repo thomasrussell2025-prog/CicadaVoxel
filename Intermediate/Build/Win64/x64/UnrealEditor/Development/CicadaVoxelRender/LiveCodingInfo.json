@@ -1,0 +1,13 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.CicadaVoxelRender.cpp.obj": [
+			"PerModuleInline.gen.cpp.obj",
+			"CicadaVoxelRenderModule.cpp.obj",
+			"CVXGPUPageUploadBridge.cpp.obj",
+			"CVXRoboticsFieldBridge.cpp.obj",
+			"CVXRoboticsFieldShader.cpp.obj",
+			"CVXRoboticsFieldViewExtension.cpp.obj"
+		]
+	}
+}

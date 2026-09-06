@@ -1,0 +1,462 @@
+// CICADA Voxel CVX-004B
+// Persistent direct sparse material field.
+//
+// Active edits are applied as coalesced fixed-size chunk patches to a bounded,
+// persistent GPU cache. The viewport never rebuilds the entire field snapshot.
+
+#include "/Engine/Public/Platform.ush"
+
+StructuredBuffer<uint> PatchWords;
+RWStructuredBuffer<uint> PageHashRW;
+RWStructuredBuffer<uint> PageMetaRW;
+RWStructuredBuffer<uint> ChunkStateWordsRW;
+RWStructuredBuffer<uint> BlockMasksRW;
+
+uint PatchCount;
+uint PatchStrideWords;
+
+static const uint CVX_PAGE_EMPTY = 1u;
+static const uint CVX_PAGE_PARTIAL = 2u;
+
+[numthreads(64, 1, 1)]
+void ApplyFieldPatchesCS(uint3 DispatchThreadId : SV_DispatchThreadID)
+{
+    const uint PatchIndex = DispatchThreadId.x;
+    if (PatchIndex >= PatchCount)
+    {
+        return;
+    }
+
+    const uint Base = PatchIndex * PatchStrideWords;
+
+    const uint Op = PatchWords[Base + 0u];
+    const uint Slot = PatchWords[Base + 1u];
+    const uint HashIndex = PatchWords[Base + 2u];
+    const uint LocalChunk = PatchWords[Base + 3u];
+
+    const uint PageX = PatchWords[Base + 4u];
+    const uint PageY = PatchWords[Base + 5u];
+    const uint PageZ = PatchWords[Base + 6u];
+
+    // Idempotent hash insert. CPU allocation guarantees that colliding pages own
+    // different hash indices; repeated writes for the same page are identical.
+    const uint HashBase = HashIndex * 4u;
+    PageHashRW[HashBase + 0u] = PageX;
+    PageHashRW[HashBase + 1u] = PageY;
+    PageHashRW[HashBase + 2u] = PageZ;
+    PageHashRW[HashBase + 3u] = Slot + 1u;
+
+    const uint MetaBase = Slot * 4u;
+
+    if (Op == 1u) // CLEAR_PAGE
+    {
+        PageMetaRW[MetaBase + 0u] = CVX_PAGE_EMPTY;
+        PageMetaRW[MetaBase + 1u] = 0u;
+        PageMetaRW[MetaBase + 2u] = 0u;
+        PageMetaRW[MetaBase + 3u] = 0u;
+        return;
+    }
+
+    if (Op != 2u || LocalChunk >= 64u)
+    {
+        return;
+    }
+
+    PageMetaRW[MetaBase + 0u] = CVX_PAGE_PARTIAL;
+
+    if (LocalChunk < 32u)
+    {
+        InterlockedOr(PageMetaRW[MetaBase + 1u], 1u << LocalChunk);
+    }
+    else
+    {
+        InterlockedOr(PageMetaRW[MetaBase + 2u], 1u << (LocalChunk - 32u));
+    }
+
+    const uint ChunkLinear = Slot * 64u + LocalChunk;
+    const uint StateBase = ChunkLinear * 4u;
+
+    ChunkStateWordsRW[StateBase + 0u] = PatchWords[Base + 8u];
+    ChunkStateWordsRW[StateBase + 1u] = PatchWords[Base + 9u];
+    ChunkStateWordsRW[StateBase + 2u] = PatchWords[Base + 10u];
+    ChunkStateWordsRW[StateBase + 3u] = PatchWords[Base + 11u];
+
+    const uint MaskBase = ChunkLinear * 64u * 2u;
+
+    [unroll]
+    for (uint Word = 0u; Word < 128u; ++Word)
+    {
+        BlockMasksRW[MaskBase + Word] = PatchWords[Base + 12u + Word];
+    }
+}
+
+
+// --------------------------------------------------------------------------
+// Read-only direct field traversal
+// --------------------------------------------------------------------------
+
+StructuredBuffer<uint> PageHash;
+StructuredBuffer<uint> PageMeta;
+StructuredBuffer<uint> ChunkStateWords;
+StructuredBuffer<uint> BlockMasks;
+
+float4 ViewRectMinSize;
+float4 LogicalSizeMM_PageEdge;
+float4 PageCounts;
+float4 RayOriginMM;
+float4 RayDirTL;
+float4 RayDirTR;
+float4 RayDirBL;
+float4 RayDirBR;
+
+uint PageHashCapacity;
+uint PageCapacity;
+
+static const uint CVX_INVALID_SLOT = 0xffffffffu;
+
+float SafeRcp(float V)
+{
+    if (abs(V) < 1.0e-7)
+    {
+        return (V < 0.0) ? -1.0e7 : 1.0e7;
+    }
+    return rcp(V);
+}
+
+uint HashPageCoord(uint3 Coord)
+{
+    uint H = Coord.x * 73856093u;
+    H ^= Coord.y * 19349663u;
+    H ^= Coord.z * 83492791u;
+    H ^= H >> 16;
+    H *= 0x7feb352du;
+    H ^= H >> 15;
+    H *= 0x846ca68bu;
+    H ^= H >> 16;
+    return H;
+}
+
+uint FindPageSlot(uint3 Page)
+{
+    const uint Mask = PageHashCapacity - 1u;
+    uint Index = HashPageCoord(Page) & Mask;
+
+    [loop]
+    for (uint Probe = 0u; Probe < 64u; ++Probe)
+    {
+        const uint Base = Index * 4u;
+        const uint SlotPlusOne = PageHash[Base + 3u];
+
+        if (SlotPlusOne == 0u)
+        {
+            return CVX_INVALID_SLOT;
+        }
+
+        if (PageHash[Base + 0u] == Page.x
+            && PageHash[Base + 1u] == Page.y
+            && PageHash[Base + 2u] == Page.z)
+        {
+            const uint Slot = SlotPlusOne - 1u;
+            return (Slot < PageCapacity) ? Slot : CVX_INVALID_SLOT;
+        }
+
+        Index = (Index + 1u) & Mask;
+    }
+
+    return CVX_INVALID_SLOT;
+}
+
+bool IntersectFieldBox(
+    float3 RayOrigin,
+    float3 RayDir,
+    float3 BoxSize,
+    out float TEnter,
+    out float TExit,
+    out float3 EntryNormal)
+{
+    float3 InvDir = float3(SafeRcp(RayDir.x), SafeRcp(RayDir.y), SafeRcp(RayDir.z));
+    float3 T0 = (0.0.xxx - RayOrigin) * InvDir;
+    float3 T1 = (BoxSize - RayOrigin) * InvDir;
+    float3 TMin3 = min(T0, T1);
+    float3 TMax3 = max(T0, T1);
+
+    TEnter = max(max(TMin3.x, TMin3.y), TMin3.z);
+    TExit = min(min(TMax3.x, TMax3.y), TMax3.z);
+
+    EntryNormal = float3(0.0, 0.0, 0.0);
+    if (TEnter == TMin3.x)
+        EntryNormal = float3((RayDir.x > 0.0) ? -1.0 : 1.0, 0.0, 0.0);
+    else if (TEnter == TMin3.y)
+        EntryNormal = float3(0.0, (RayDir.y > 0.0) ? -1.0 : 1.0, 0.0);
+    else
+        EntryNormal = float3(0.0, 0.0, (RayDir.z > 0.0) ? -1.0 : 1.0);
+
+    return TExit >= max(TEnter, 0.0);
+}
+
+float DistanceToGridBoundary(float Coord, float Dir, float CellSize)
+{
+    if (abs(Dir) < 1.0e-7)
+    {
+        return 1.0e20;
+    }
+
+    const float Cell = floor(Coord / CellSize);
+    float Boundary = (Dir > 0.0) ? ((Cell + 1.0) * CellSize) : (Cell * CellSize);
+    float T = (Boundary - Coord) / Dir;
+
+    if (T <= 1.0e-5)
+    {
+        Boundary += (Dir > 0.0) ? CellSize : -CellSize;
+        T = (Boundary - Coord) / Dir;
+    }
+
+    return max(T, 1.0e-5);
+}
+
+float AdvanceGrid(
+    inout float3 PositionMM,
+    float3 RayDir,
+    float CellSize,
+    out float3 CrossedNormal)
+{
+    float3 DT = float3(
+        DistanceToGridBoundary(PositionMM.x, RayDir.x, CellSize),
+        DistanceToGridBoundary(PositionMM.y, RayDir.y, CellSize),
+        DistanceToGridBoundary(PositionMM.z, RayDir.z, CellSize));
+
+    float StepT = DT.x;
+    uint Axis = 0u;
+    if (DT.y < StepT) { StepT = DT.y; Axis = 1u; }
+    if (DT.z < StepT) { StepT = DT.z; Axis = 2u; }
+
+    CrossedNormal = float3(0.0, 0.0, 0.0);
+    if (Axis == 0u) CrossedNormal.x = (RayDir.x > 0.0) ? -1.0 : 1.0;
+    if (Axis == 1u) CrossedNormal.y = (RayDir.y > 0.0) ? -1.0 : 1.0;
+    if (Axis == 2u) CrossedNormal.z = (RayDir.z > 0.0) ? -1.0 : 1.0;
+
+    StepT += 0.0005;
+    PositionMM += RayDir * StepT;
+    return StepT;
+}
+
+uint LocalChunkIndexFromGlobal(uint3 ChunkGlobal)
+{
+    const uint3 L = ChunkGlobal & 3u.xxx;
+    return L.x + L.y * 4u + L.z * 16u;
+}
+
+uint LocalBlockIndex(uint3 BlockInChunk)
+{
+    return BlockInChunk.x + BlockInChunk.y * 4u + BlockInChunk.z * 16u;
+}
+
+uint LocalVoxelBit(uint3 VoxelInBlock)
+{
+    return VoxelInBlock.x + VoxelInBlock.y * 4u + VoxelInBlock.z * 16u;
+}
+
+bool IsChunkExplicit(uint Slot, uint LocalChunk)
+{
+    const uint Base = Slot * 4u;
+    if (LocalChunk < 32u)
+    {
+        return (PageMeta[Base + 1u] & (1u << LocalChunk)) != 0u;
+    }
+
+    return (PageMeta[Base + 2u] & (1u << (LocalChunk - 32u))) != 0u;
+}
+
+uint GetBlockState(uint Slot, uint LocalChunk, uint BlockIndex)
+{
+    const uint ChunkLinear = Slot * 64u + LocalChunk;
+    const uint Base = ChunkLinear * 4u;
+    const uint Packed = ChunkStateWords[Base + (BlockIndex >> 4u)];
+    return (Packed >> ((BlockIndex & 15u) * 2u)) & 3u;
+}
+
+bool GetExactBlockMask(
+    uint Slot,
+    uint LocalChunk,
+    uint BlockIndex,
+    out uint Low,
+    out uint High)
+{
+    const uint ChunkLinear = Slot * 64u + LocalChunk;
+    const uint Base = (ChunkLinear * 64u + BlockIndex) * 2u;
+    Low = BlockMasks[Base + 0u];
+    High = BlockMasks[Base + 1u];
+    return true;
+}
+
+bool IsMaskBitSolid(uint Low, uint High, uint Bit)
+{
+    if (Bit < 32u)
+        return (Low & (1u << Bit)) != 0u;
+    return (High & (1u << (Bit - 32u))) != 0u;
+}
+
+bool TraceField(
+    float3 RayOrigin,
+    float3 RayDir,
+    out float HitT,
+    out float3 HitPosition,
+    out float3 HitNormal,
+    out uint FineSteps)
+{
+    HitT = 0.0;
+    HitPosition = 0.0.xxx;
+    HitNormal = 0.0.xxx;
+    FineSteps = 0u;
+
+    const float3 SizeMM = LogicalSizeMM_PageEdge.xyz;
+    const float PageEdge = LogicalSizeMM_PageEdge.w;
+    const uint3 Counts = max(uint3(PageCounts.xyz + 0.5), 1u.xxx);
+
+    float TEnter, TExit;
+    float3 CurrentNormal;
+    if (!IntersectFieldBox(RayOrigin, RayDir, SizeMM, TEnter, TExit, CurrentNormal))
+    {
+        return false;
+    }
+
+    float T = max(TEnter, 0.0);
+    float3 P = RayOrigin + RayDir * (T + 0.0005);
+    T += 0.0005;
+
+    [loop]
+    for (uint Iteration = 0u; Iteration < 4096u && T <= TExit; ++Iteration)
+    {
+        if (any(P < 0.0.xxx) || any(P >= SizeMM))
+        {
+            break;
+        }
+
+        const uint3 Page = uint3(floor(P / PageEdge));
+        if (any(Page >= Counts))
+        {
+            break;
+        }
+
+        const uint Slot = FindPageSlot(Page);
+
+        // A page absent from the hot cache is untouched and therefore uses the
+        // current proof world's implicit-solid base.
+        if (Slot == CVX_INVALID_SLOT)
+        {
+            HitT = T;
+            HitPosition = P;
+            HitNormal = CurrentNormal;
+            return true;
+        }
+
+        const uint MetaBase = Slot * 4u;
+        const uint PageFlags = PageMeta[MetaBase + 0u];
+
+        if (PageFlags == CVX_PAGE_EMPTY)
+        {
+            float3 N;
+            const float DT = AdvanceGrid(P, RayDir, PageEdge, N);
+            T += DT;
+            CurrentNormal = N;
+            continue;
+        }
+
+        const uint3 ChunkGlobal = uint3(floor(P / 16.0));
+        const uint LocalChunk = LocalChunkIndexFromGlobal(ChunkGlobal);
+
+        if (!IsChunkExplicit(Slot, LocalChunk))
+        {
+            HitT = T;
+            HitPosition = P;
+            HitNormal = CurrentNormal;
+            return true;
+        }
+
+        const uint3 BlockGlobal = uint3(floor(P / 4.0));
+        const uint3 BlockInChunk = BlockGlobal & 3u.xxx;
+        const uint BlockIndex = LocalBlockIndex(BlockInChunk);
+        const uint State = GetBlockState(Slot, LocalChunk, BlockIndex);
+
+        if (State == 0u)
+        {
+            float3 N;
+            const float DT = AdvanceGrid(P, RayDir, 4.0, N);
+            T += DT;
+            CurrentNormal = N;
+            continue;
+        }
+
+        if (State == 1u || State == 3u)
+        {
+            HitT = T;
+            HitPosition = P;
+            HitNormal = CurrentNormal;
+            return true;
+        }
+
+        uint MaskLow, MaskHigh;
+        GetExactBlockMask(Slot, LocalChunk, BlockIndex, MaskLow, MaskHigh);
+
+        const uint3 VoxelGlobal = uint3(floor(P));
+        const uint3 VoxelInBlock = VoxelGlobal & 3u.xxx;
+        const uint VoxelBit = LocalVoxelBit(VoxelInBlock);
+        ++FineSteps;
+
+        if (IsMaskBitSolid(MaskLow, MaskHigh, VoxelBit))
+        {
+            HitT = T;
+            HitPosition = P;
+            HitNormal = CurrentNormal;
+            return true;
+        }
+
+        float3 N;
+        const float DT = AdvanceGrid(P, RayDir, 1.0, N);
+        T += DT;
+        CurrentNormal = N;
+    }
+
+    return false;
+}
+
+float4 MainPS(float4 SvPosition : SV_POSITION) : SV_Target0
+{
+    const float2 Pixel = SvPosition.xy;
+    const float2 ViewMin = ViewRectMinSize.xy;
+    const float2 ViewSize = max(ViewRectMinSize.zw, 1.0.xx);
+    const float2 UV = saturate((Pixel - ViewMin) / ViewSize);
+
+    const float3 DirTop = lerp(RayDirTL.xyz, RayDirTR.xyz, UV.x);
+    const float3 DirBottom = lerp(RayDirBL.xyz, RayDirBR.xyz, UV.x);
+    const float3 RayDir = normalize(lerp(DirTop, DirBottom, UV.y));
+
+    float HitT;
+    float3 HitP;
+    float3 HitN;
+    uint FineSteps;
+
+    if (!TraceField(RayOriginMM.xyz, RayDir, HitT, HitP, HitN, FineSteps))
+    {
+        return float4(0.0, 0.0, 0.0, 0.0);
+    }
+
+    float3 N = normalize(HitN);
+    if (dot(N, N) < 0.25)
+    {
+        N = -RayDir;
+    }
+
+    const float3 LightDir = normalize(float3(-0.45, 0.55, 0.70));
+    const float Diffuse = 0.28 + 0.72 * saturate(dot(N, LightDir));
+
+    const float PagePattern = frac((HitP.x + HitP.y + HitP.z) / 64.0);
+    const float3 Base = lerp(
+        float3(0.30, 0.48, 0.66),
+        float3(0.42, 0.62, 0.78),
+        PagePattern * 0.18);
+
+    const float FineBoost = saturate(float(FineSteps) / 12.0) * 0.06;
+
+    return float4(Base * Diffuse + FineBoost.xxx, 1.0);
+}

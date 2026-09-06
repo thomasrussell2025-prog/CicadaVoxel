@@ -1,0 +1,338 @@
+{
+    "version": "2.1.0",
+    "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+    "runs": [
+        {
+            "results": [
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'UInstancedStaticMeshComponent::BuildComponentInstanceData': Please use BuildComponentInstanceData with EShaderPlatform argument and not ERHIFeatureLevel::Type - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Source/CicadaVoxel/Private/CicadaVoxelVolumeActor.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Engine/Classes/Components/HierarchicalInstancedStaticMeshComponent.h"
+                                },
+                                "region": {
+                                    "startLine": 353,
+                                    "startColumn": 26,
+                                    "snippet": {
+                                        "text": "\tENGINE_API virtual void BuildComponentInstanceData(ERHIFeatureLevel::Type FeatureLevel, FInstanceUpdateComponentDesc& OutData) override;"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'UMeshComponent::GetMaterialRelevance': Please use GetMaterialRelevance with EShaderPlatform argument and not ERHIFeatureLevel::Type - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Source/CicadaVoxel/Private/CicadaVoxelVolumeActor.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/GeometryFramework/Public/Components/BaseDynamicMeshComponent.h"
+                                },
+                                "region": {
+                                    "startLine": 678,
+                                    "startColumn": 51,
+                                    "snippet": {
+                                        "text": "\tGEOMETRYFRAMEWORK_API virtual FMaterialRelevance GetMaterialRelevance(ERHIFeatureLevel::Type InFeatureLevel) const override;"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'Chaos::FImplicitObject::GetRadius': Please use GetRadiusf instead. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Source/CicadaVoxel/Private/CicadaVoxelVolumeActor.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Sphere.h"
+                                },
+                                "region": {
+                                    "startLine": 74,
+                                    "startColumn": 17,
+                                    "snippet": {
+                                        "text": "\t\tvirtual FReal GetRadius() const override"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "relatedLocations": [
+                        {
+                            "id": 0,
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Sphere.h"
+                                },
+                                "region": {
+                                    "startLine": 74,
+                                    "startColumn": 17,
+                                    "snippet": {
+                                        "text": "\t\tvirtual FReal GetRadius() const override"
+                                    }
+                                }
+                            },
+                            "message": {
+                                "text": "the template instantiation context (the oldest one first) is"
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Sphere.h"
+                                },
+                                "region": {
+                                    "startLine": 27,
+                                    "startColumn": 8,
+                                    "snippet": {
+                                        "text": "\tclass TSphere final : public FImplicitObject"
+                                    }
+                                }
+                            },
+                            "message": {
+                                "text": "while compiling class template 'Chaos::TSphere'"
+                            },
+                            "properties": {
+                                "nestingLevel": 1
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Sphere.h"
+                                },
+                                "region": {
+                                    "startLine": 337,
+                                    "startColumn": 41,
+                                    "snippet": {
+                                        "text": "\t\t\treturn Chaos::FImplicitObjectPtr(new FSphere(Center, GetRadiusf()));"
+                                    }
+                                }
+                            },
+                            "message": {
+                                "text": "see reference to class template instantiation 'Chaos::TSphere<Chaos::FReal,3>' being compiled"
+                            },
+                            "properties": {
+                                "nestingLevel": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'Chaos::FImplicitObject::GetMargin': Please use GetMarginf instead. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Source/CicadaVoxel/Private/CicadaVoxelVolumeActor.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Convex.h"
+                                },
+                                "region": {
+                                    "startLine": 207,
+                                    "startColumn": 17,
+                                    "snippet": {
+                                        "text": "\t\tvirtual FReal GetMargin() const override"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'Chaos::FImplicitObject::GetRadius': Please use GetRadiusf instead. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Source/CicadaVoxel/Private/CicadaVoxelVolumeActor.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Convex.h"
+                                },
+                                "region": {
+                                    "startLine": 212,
+                                    "startColumn": 17,
+                                    "snippet": {
+                                        "text": "\t\tvirtual FReal GetRadius() const override"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'Chaos::FImplicitObject::GetRadius': Please use GetRadiusf instead. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Source/CicadaVoxel/Private/CicadaVoxelVolumeActor.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Plane.h"
+                                },
+                                "region": {
+                                    "startLine": 42,
+                                    "startColumn": 16,
+                                    "snippet": {
+                                        "text": "\tvirtual FReal GetRadius() const override"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "relatedLocations": [
+                        {
+                            "id": 0,
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Plane.h"
+                                },
+                                "region": {
+                                    "startLine": 42,
+                                    "startColumn": 16,
+                                    "snippet": {
+                                        "text": "\tvirtual FReal GetRadius() const override"
+                                    }
+                                }
+                            },
+                            "message": {
+                                "text": "the template instantiation context (the oldest one first) is"
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Convex.h"
+                                },
+                                "region": {
+                                    "startLine": 926,
+                                    "startColumn": 5,
+                                    "snippet": {
+                                        "text": "\t\t\t\tAr << TmpPlanes;"
+                                    }
+                                }
+                            },
+                            "message": {
+                                "text": "see reference to class template instantiation 'Chaos::TPlane<Chaos::FConvex::FRealType,3>' being compiled"
+                            },
+                            "properties": {
+                                "nestingLevel": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'Chaos::FImplicitObject::GetRadius': Please use GetRadiusf instead. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Source/CicadaVoxel/Private/CicadaVoxelVolumeActor.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Box.h"
+                                },
+                                "region": {
+                                    "startLine": 104,
+                                    "startColumn": 17,
+                                    "snippet": {
+                                        "text": "\t\tvirtual FReal GetRadius() const override"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "relatedLocations": [
+                        {
+                            "id": 0,
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Box.h"
+                                },
+                                "region": {
+                                    "startLine": 104,
+                                    "startColumn": 17,
+                                    "snippet": {
+                                        "text": "\t\tvirtual FReal GetRadius() const override"
+                                    }
+                                }
+                            },
+                            "message": {
+                                "text": "the template instantiation context (the oldest one first) is"
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///C:/Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/Convex.h"
+                                },
+                                "region": {
+                                    "startLine": 966,
+                                    "startColumn": 23,
+                                    "snippet": {
+                                        "text": "\t\t\tTBox<FRealType,3>::SerializeAsAABB(Ar, LocalBoundingBox);"
+                                    }
+                                }
+                            },
+                            "message": {
+                                "text": "see reference to class template instantiation 'Chaos::TBox<Chaos::FConvex::FRealType,3>' being compiled"
+                            },
+                            "properties": {
+                                "nestingLevel": 1
+                            }
+                        }
+                    ]
+                }
+            ],
+            "tool": {
+                "driver": {
+                    "name": "MSVC",
+                    "shortDescription": {
+                        "text": "Microsoft Visual C++ Compiler Warnings/Errors"
+                    },
+                    "informationUri": "https://docs.microsoft.com/cpp/error-messages/compiler-errors-1/c-cpp-build-errors"
+                }
+            }
+        }
+    ]
+}

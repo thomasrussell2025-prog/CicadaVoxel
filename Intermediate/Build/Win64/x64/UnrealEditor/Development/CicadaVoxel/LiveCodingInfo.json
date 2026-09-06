@@ -1,0 +1,17 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.CicadaVoxel.cpp.obj": [
+			"CicadaVoxel.init.gen.cpp.obj",
+			"CicadaVoxelVolumeActor.gen.cpp.obj",
+			"PerModuleInline.gen.cpp.obj",
+			"CicadaVoxelModule.cpp.obj",
+			"CicadaVoxelVolumeActor.cpp.obj",
+			"CVXGPUBridge.cpp.obj",
+			"CVXSparseVolume.cpp.obj",
+			"CVXSparseVolumeTests.cpp.obj",
+			"CVXSurfaceMesher.cpp.obj",
+			"CVXVirtualPageSpine.cpp.obj"
+		]
+	}
+}

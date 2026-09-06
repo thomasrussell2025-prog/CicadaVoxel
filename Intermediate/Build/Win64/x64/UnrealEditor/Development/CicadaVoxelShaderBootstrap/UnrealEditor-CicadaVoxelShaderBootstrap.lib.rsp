@@ -1,0 +1,13 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/experimental:deterministic
+/DEF
+/NAME:"UnrealEditor-CicadaVoxelShaderBootstrap.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Intermediate/Build/Win64/x64/MmmVoxelsEditor/Development/CoreUObject/SharedPCH.CoreUObject.Project.ValApi.ValExpApi.Cpp20.h.obj"
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelShaderBootstrap/Module.CicadaVoxelShaderBootstrap.cpp.obj"
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelShaderBootstrap/CicadaVoxelShaderBootstrapModule.cpp.obj"
+/OUT:"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelShaderBootstrap/UnrealEditor-CicadaVoxelShaderBootstrap.lib"

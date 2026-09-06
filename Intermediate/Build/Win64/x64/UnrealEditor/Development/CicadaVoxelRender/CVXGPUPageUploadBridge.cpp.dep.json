@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\source\\cicadavoxelrender\\private\\cvxgpupageuploadbridge.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\intermediate\\build\\win64\\x64\\mmmvoxelseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.valexpapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cicadavoxelrender\\definitions.cicadavoxelrender.h",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\source\\cicadavoxelrender\\public\\cvxgpupageuploadbridge.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

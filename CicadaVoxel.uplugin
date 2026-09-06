@@ -1,0 +1,29 @@
+{
+  "FileVersion": 3,
+  "Version": 28,
+  "VersionName": "2.1.0-CVX004B-PERSISTENT-GPU-FIELD",
+  "FriendlyName": "CICADA Voxel",
+  "Description": "CVX-004B persistent GPU material field. Removes per-edit full sparse-field rescans and per-frame field-buffer recreation. CVX4 edit packets are coalesced by 16mm chunk, applied by RDG compute into a fixed ~132MB 4096-page GPU cache, and rendered directly through the exact 64/16/4/1mm field path. Legacy mesh skin remains hard-disabled.",
+  "Category": "CICADA",
+  "CreatedBy": "CICADA WORKS",
+  "CanContainContent": true,
+  "IsBetaVersion": true,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "CicadaVoxelShaderBootstrap",
+      "Type": "Runtime",
+      "LoadingPhase": "PostConfigInit"
+    },
+    {
+      "Name": "CicadaVoxelRender",
+      "Type": "Runtime",
+      "LoadingPhase": "None"
+    },
+    {
+      "Name": "CicadaVoxel",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

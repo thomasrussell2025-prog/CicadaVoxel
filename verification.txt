@@ -1,0 +1,20 @@
+CICADA Voxel CVX-003B verification
+
+Static source checks
+- C++/header delimiter balance: PASS
+- Hierarchical 64mm -> 16mm -> 4mm -> temporary 2mm -> exact 1mm edit path present: PASS
+- 64mm page tombstones present: PASS
+- 16mm chunk tombstones present: PASS
+- CVX4 CLEAR_PAGE delta format present: PASS
+- Throughput-first multi-carve beam present: PASS
+- 250mm-radius macro blast key B present: PASS
+- No active global shader registration macros: PASS
+
+Independent reference check
+A Python dense 32^3 reference sphere subtraction was compared cell-by-cell with a mirror of the new hierarchical classifier for center=(15.25,16.5,14.75)mm radius=10.25mm. Mismatches: 0 / 32768.
+
+Representative hierarchy work estimates (not Unreal benchmarks)
+Radius 60mm: 27 page candidates; 1,280 chunk visits; 16,832 block visits; ~135,424 exact 1mm boundary tests after temporary 2mm classification.
+Radius 250mm: 729 page candidates; 127 complete pages can collapse to tombstones; 18,944 chunk visits; 295,040 block visits; ~2.36M exact 1mm boundary tests. The previous flat 4mm bounding-box approach considered ~2.0M 4mm block coordinates before rejection at this radius.
+
+UE-specific compile/runtime remains gated by CICADA Unreal Forge on the user's UE 5.8.2 installation.

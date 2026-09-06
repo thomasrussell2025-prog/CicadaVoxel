@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cicadavoxelshaderbootstrap\\module.cicadavoxelshaderbootstrap.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\intermediate\\build\\win64\\x64\\mmmvoxelseditor\\development\\coreuobject\\sharedpch.coreuobject.project.valapi.valexpapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cicadavoxelshaderbootstrap\\definitions.cicadavoxelshaderbootstrap.h",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cicadavoxelshaderbootstrap\\permoduleinline.gen.cpp",
+            "c:\\program files\\epic games\\ue_5.8\\engine\\source\\runtime\\core\\public\\hal\\permoduleinline.inl"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cicadavoxel\\module.cicadavoxel.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\intermediate\\build\\win64\\x64\\mmmvoxelseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.valexpapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cicadavoxel\\definitions.cicadavoxel.h",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\unrealeditor\\inc\\cicadavoxel\\uht\\cicadavoxel.init.gen.cpp",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\unrealeditor\\inc\\cicadavoxel\\uht\\cicadavoxelvolumeactor.gen.cpp",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\source\\cicadavoxel\\public\\cicadavoxelvolumeactor.h",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\source\\cicadavoxel\\public\\cvxsparsevolume.h",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\source\\cicadavoxel\\public\\cvxtypes.h",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\source\\cicadavoxel\\public\\cvxvirtualpagespine.h",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\unrealeditor\\inc\\cicadavoxel\\uht\\cicadavoxelvolumeactor.generated.h",
+            "c:\\users\\thoma\\documents\\unreal projects\\mmmvoxels\\plugins\\cicadavoxel\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cicadavoxel\\permoduleinline.gen.cpp",
+            "c:\\program files\\epic games\\ue_5.8\\engine\\source\\runtime\\core\\public\\hal\\permoduleinline.inl"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

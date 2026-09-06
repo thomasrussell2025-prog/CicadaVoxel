@@ -1,0 +1,14 @@
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Source/CicadaVoxelShaderBootstrap/Private/CicadaVoxelShaderBootstrapModule.cpp"
+@"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelShaderBootstrap/CicadaVoxelShaderBootstrap.Shared.rsp"
+/FI"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Intermediate/Build/Win64/x64/MmmVoxelsEditor/Development/CoreUObject/SharedPCH.CoreUObject.Project.ValApi.ValExpApi.Cpp20.h"
+/FI"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelShaderBootstrap/Definitions.CicadaVoxelShaderBootstrap.h"
+/Yu"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Intermediate/Build/Win64/x64/MmmVoxelsEditor/Development/CoreUObject/SharedPCH.CoreUObject.Project.ValApi.ValExpApi.Cpp20.h"
+/Fp"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Intermediate/Build/Win64/x64/MmmVoxelsEditor/Development/CoreUObject/SharedPCH.CoreUObject.Project.ValApi.ValExpApi.Cpp20.h.pch"
+/Fo"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelShaderBootstrap/CicadaVoxelShaderBootstrapModule.cpp.obj"
+/experimental:log "C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelShaderBootstrap/CicadaVoxelShaderBootstrapModule.cpp.sarif"
+/sourceDependencies "C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelShaderBootstrap/CicadaVoxelShaderBootstrapModule.cpp.dep.json"
+/nologo
+/TP
+/GR-
+/std:c++20
+/wd5054

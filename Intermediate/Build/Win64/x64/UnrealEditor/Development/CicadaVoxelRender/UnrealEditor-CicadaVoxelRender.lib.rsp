@@ -1,0 +1,17 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/experimental:deterministic
+/DEF
+/NAME:"UnrealEditor-CicadaVoxelRender.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Intermediate/Build/Win64/x64/MmmVoxelsEditor/Development/UnrealEd/SharedPCH.UnrealEd.Project.ValApi.ValExpApi.Cpp20.h.obj"
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelRender/Module.CicadaVoxelRender.cpp.obj"
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelRender/CicadaVoxelRenderModule.cpp.obj"
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelRender/CVXGPUPageUploadBridge.cpp.obj"
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelRender/CVXRoboticsFieldBridge.cpp.obj"
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelRender/CVXRoboticsFieldShader.cpp.obj"
+"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelRender/CVXRoboticsFieldViewExtension.cpp.obj"
+/OUT:"C:/Users/thoma/Documents/Unreal Projects/MmmVoxels/Plugins/CicadaVoxel/Intermediate/Build/Win64/x64/UnrealEditor/Development/CicadaVoxelRender/UnrealEditor-CicadaVoxelRender.lib"
